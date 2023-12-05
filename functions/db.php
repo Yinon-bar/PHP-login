@@ -1,10 +1,10 @@
 <?php
 
 // חיבור לדאטהבייס בבית
-// $connect = mysqli_connect('localhost', 'root', '', 'login_edwin_diaz');
+$connect = mysqli_connect('localhost', 'root', '', 'login_edwin_diaz');
 
 // חיבור לדאטהבייס ברשת
-$connect = mysqli_connect('srv1048.hstgr.io', 'u528206822_inon', 'INONab@053508384', 'u528206822_tutorials');
+// $connect = mysqli_connect('srv1048.hstgr.io', 'u528206822_inon', 'INONab@053508384', 'u528206822_tutorials');
 
 function row_count($result)
 {
