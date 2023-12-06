@@ -223,7 +223,7 @@ function recover_password()
     if (isset($_SESSION['token']) && $_POST['token'] == $_SESSION['token']) {
       $email = $_POST['email'];
       if (email_exist($email)) {
-        $validation_code = md5($email, microtime());
+        $validation_code = md5($email + microtime());
         setcookie('temp_access', $validation_code, time() + 60);
         $sql = "UPDATE users SET validation_code = '$validation_code' WHERE email = '$email'";
         $result = query($sql);
