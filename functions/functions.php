@@ -171,17 +171,17 @@ function validate_user_login(): void
     if (empty($password)) {
       $errors[] = "Password field cannot be empty";
     }
-  }
-  if (!empty($errors)) {
-    foreach ($errors as $error) {
-      echo $error;
-    }
-  } else {
-    if (login_user($email, $password, $remember)) {
-      echo "Gooooooooood";
-      redirect("admin.php");
+    if (!empty($errors)) {
+      foreach ($errors as $error) {
+        echo $error;
+      }
     } else {
-      echo "Your credentials are not correct";
+      if (login_user($email, $password, $remember)) {
+        echo "Gooooooooood";
+        redirect("admin.php");
+      } else {
+        echo "Your credentials are not correct";
+      }
     }
   }
 }
@@ -225,10 +225,14 @@ function recover_password()
       if (email_exist($email)) {
         $validation_code = md5($email, microtime());
         setcookie('temp_access', $validation_code, time() + 60);
+        $sql = "UPDATE users SET validation_code = '$validation_code' WHERE email = '$email'";
+        $result = query($sql);
+        confirm_data($result);
         $subject = "Email recover";
         $message = "Please enter the code $validation_code in the correct input, Click here to reset your password http://localhost/tutorials/login/login.php?email=$email&code=$validation_code";
         $headers = "From: noreplay@hostinger.com";
         send_email($email, $subject, $message, $headers);
+        echo "Check your email";
       } else {
         echo "This email does not exist";
       }
