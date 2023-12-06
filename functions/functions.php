@@ -221,7 +221,17 @@ function recover_password()
 {
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_SESSION['token']) && $_POST['token'] == $_SESSION['token']) {
-      echo "it works!";
+      $email = $_POST['email'];
+      if (email_exist($email)) {
+        $validation_code = md5($email, microtime());
+        setcookie('temp_access', $validation_code, time() + 60);
+        $subject = "Email recover";
+        $message = "Please enter the code $validation_code in the correct input, Click here to reset your password http://localhost/tutorials/login/login.php?email=$email&code=$validation_code";
+        $headers = "From: noreplay@hostinger.com";
+        send_email($email, $subject, $message, $headers);
+      } else {
+        echo "This email does not exist";
+      }
     }
   }
 }
