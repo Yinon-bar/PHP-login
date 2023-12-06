@@ -220,6 +220,8 @@ function logged_in()
 function recover_password()
 {
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    echo "it works!";
+    if (isset($_SESSION['token']) && $_POST['token'] == $_SESSION['token']) {
+      echo "it works!";
+    }
   }
 }
