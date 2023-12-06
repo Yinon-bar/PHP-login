@@ -232,6 +232,8 @@ function recover_password()
       } else {
         echo "This email does not exist";
       }
+    } else {
+      redirect("index.php");
     }
   }
 }
