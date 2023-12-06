@@ -163,7 +163,7 @@ function validate_user_login(): void
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email    = escape($_POST['email']);
     $password = escape($_POST['password']);
-    $remember = clean_str(isset($_POST['remember']) ?? "");
+    $remember = isset($_POST['remember']) ?? null;
 
     if (empty($email)) {
       $errors[] = "Email field cannot be empty";
@@ -195,7 +195,7 @@ function login_user($email, $password, $remember)
     $db_password = $row['password'];
     if ($password === $db_password) {
       if ($remember == "on") {
-        setcookie('email', $email, time() + 60);
+        setcookie('email', $email, time() + 86400);
       }
       $_SESSION['email'] = $email;
       return true;
@@ -210,8 +210,16 @@ function login_user($email, $password, $remember)
 // Logged in function
 function logged_in()
 {
-  if (isset($_SESSION['email'])) {
+  if (isset($_SESSION['email']) or isset($_COOKIE['email'])) {
     return true;
   }
   return false;
+}
+
+// Recover password
+function recover_password()
+{
+  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    echo "it works!";
+  }
 }
