@@ -194,9 +194,9 @@ function login_user($email, $password, $remember)
     $row = fetch_array($result);
     $db_password = $row['password'];
     if ($password === $db_password) {
-
-
-
+      if ($remember == "on") {
+        setcookie('email', $email, time() + 60);
+      }
       $_SESSION['email'] = $email;
       return true;
     } else {
