@@ -163,6 +163,8 @@ function validate_user_login(): void
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email    = escape($_POST['email']);
     $password = escape($_POST['password']);
+    $remember = clean_str(isset($_POST['remember']) ?? "");
+
     if (empty($email)) {
       $errors[] = "Email field cannot be empty";
     }
@@ -175,7 +177,7 @@ function validate_user_login(): void
       echo $error;
     }
   } else {
-    if (login_user($email, $password)) {
+    if (login_user($email, $password, $remember)) {
       echo "Gooooooooood";
       redirect("admin.php");
     } else {
@@ -184,7 +186,7 @@ function validate_user_login(): void
   }
 }
 
-function login_user($email, $password)
+function login_user($email, $password, $remember)
 {
   $sql = "SELECT password, id FROM users WHERE email = '$email' AND active = 1";
   $result = query($sql);
@@ -192,6 +194,9 @@ function login_user($email, $password)
     $row = fetch_array($result);
     $db_password = $row['password'];
     if ($password === $db_password) {
+
+
+
       $_SESSION['email'] = $email;
       return true;
     } else {
