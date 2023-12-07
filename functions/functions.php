@@ -250,7 +250,17 @@ function validate_code()
 {
   if (isset($_COOKIE['temp_access_code'])) {
     if ($_SERVER['REQUEST_METHOD'] == "GET") {
-      if (isset($GET['email']) && isset($_GET['code'])) {
+      if (!isset($GET['email']) && !isset($_GET['code'])) {
+        redirect("index.php");
+      } elseif (empty($_GET['email']) || empty($_GET['code'])) {
+        redirect("index.php");
+      } else {
+        if (isset($_POST['code'])) {
+          echo "Getting post from form";
+          $email = $_GET['email'];
+          $validation_code = $_POST['code'];
+          $sql = "SELECT id FROM users WHERE validation_code = '$validation_code'";
+        }
       }
     }
   } else {
