@@ -224,7 +224,7 @@ function recover_password()
       $email = $_POST['email'];
       if (email_exist($email)) {
         $validation_code = md5($email, microtime());
-        setcookie('temp_access', $validation_code, time() + 60);
+        setcookie('temp_access', $validation_code, time() + 900);
         $sql = "UPDATE users SET validation_code = '$validation_code' WHERE email = '$email'";
         $result = query($sql);
         confirm_data($result);
@@ -259,7 +259,13 @@ function validate_code()
           echo "Getting post from form";
           $email = $_GET['email'];
           $validation_code = $_POST['code'];
-          $sql = "SELECT id FROM users WHERE validation_code = '$validation_code'";
+          $sql = "SELECT id FROM users WHERE validation_code = '$validation_code' AND email = '$email'";
+          $result = query($sql);
+          if (row_count($result) == 1) {
+            redirect("reset.php");
+          } else {
+            echo "Sorry, wrong validation code";
+          }
         }
       }
     }
