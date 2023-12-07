@@ -223,7 +223,7 @@ function recover_password()
     if (isset($_SESSION['token']) && $_POST['token'] == $_SESSION['token']) {
       $email = $_POST['email'];
       if (email_exist($email)) {
-        $validation_code = md5($email + microtime());
+        $validation_code = md5($email, microtime());
         setcookie('temp_access', $validation_code, time() + 60);
         $sql = "UPDATE users SET validation_code = '$validation_code' WHERE email = '$email'";
         $result = query($sql);
@@ -231,13 +231,30 @@ function recover_password()
         $subject = "Email recover";
         $message = "Please enter the code $validation_code in the correct input, Click here to reset your password http://localhost/tutorials/login/login.php?email=$email&code=$validation_code";
         $headers = "From: noreplay@hostinger.com";
-        send_email($email, $subject, $message, $headers);
+        if (!send_email($email, $subject, $message, $headers)) {
+          echo "This email does not exist";
+        } else {
+          set_message("<p class='bg-success'>Check your email</p>");
+          redirect("index.php");
+        }
         echo "Check your email";
-      } else {
-        echo "This email does not exist";
       }
     } else {
       redirect("index.php");
     }
+  }
+}
+
+// Code Validation
+function validate_code()
+{
+  if (isset($_COOKIE['temp_access_code'])) {
+    if ($_SERVER['REQUEST_METHOD'] == "GET") {
+      if (isset($GET['email']) && isset($_GET['code'])) {
+      }
+    }
+  } else {
+    set_message("<p class='bg-danger'>Check your email</p>");
+    redirect("recover.php");
   }
 }
